@@ -12,7 +12,6 @@ Live at: https://play.radiocombinator.com
 - Bring your own stream URL or **search radio streams** using the public API from [radio‑browser.info](https://radio-browser.info)
 - **Smart Search** — recognizes country names and genres automatically (see [Smart Search](#smart-search))
 - **Favorites list** — save your favorite stations in browser localStorage
-- **Auto-resume** — optionally start the last played station when the app opens
 - **Shareable links** — current theme and stream are encoded in the URL, so you can share exactly what you're listening to
 - **Theme support**
   - Customizable UI via CSS themes

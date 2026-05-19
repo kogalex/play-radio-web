@@ -616,6 +616,22 @@ main#app {
   letter-spacing: 0.04em;
 }
 
+.station-meta__track {
+  font-size: 0.72rem;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.station-meta__track-label {
+  color: var(--color-text-dim);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  margin-right: 0.35rem;
+  text-transform: uppercase;
+}
+
 .station-meta__tags {
   display: flex;
   flex-wrap: wrap;

@@ -232,7 +232,9 @@ All state is derived from the browser URL or localStorage — no runtime state s
 | Active theme ID | `?theme=` query param | URL (shareable) |
 | Favorite stations | `localStorage` key `radio_favorites_v1` | Persistent across sessions |
 | ICY metadata cache | `localStorage` key `icymeta_cache` | Persistent across sessions |
-| Currently playing URL | `Player.currentUrl` (in-memory) | Lost on page reload (restored from URL) |
+| Auto-resume setting | `localStorage` key `radio_auto_resume` | Persistent across sessions |
+| Last played station URL | `localStorage` key `radio_last_station_v1` | Persistent across sessions |
+| Currently selected URL | `Player.currentUrl` (in-memory) | Restored from URL, last station, or default |
 
 ---
 

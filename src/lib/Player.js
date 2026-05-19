@@ -77,12 +77,20 @@ export const Player = (() => {
   const btnRecord  = document.getElementById('btn-record');
   const urlDisplay = document.getElementById('stream-url-display');
   const corsNotice = document.getElementById('cors-notice');
+  const resumeToggle = document.getElementById('auto-resume-toggle');
 
-  let currentUrl   = null;
+  const DEFAULT_URL = 'https://mangoradio.stream.laut.fm/mangoradio';
+  const AUTO_RESUME_KEY = 'radio_auto_resume';
+  const LAST_STATION_KEY = 'radio_last_station_v1';
+
+  const params = new URLSearchParams(window.location.search);
+  const requestedUrl = params.get('play');
+
+  let autoResumeEnabled = _readAutoResume();
+  let currentUrl = requestedUrl || _readLastStation() || DEFAULT_URL;
   let corsCheckTimer = null;
 
-  const params     = new URLSearchParams(window.location.search);
-  const initialUrl = params.get('play') || 'https://mangoradio.stream.laut.fm/mangoradio';
+  const initialUrl = autoResumeEnabled ? currentUrl : null;
 
   /* ---------------------------------------------------------
      EVENT EMITTER
@@ -106,6 +114,69 @@ export const Player = (() => {
     window.history.replaceState({}, '', u.toString());
   }
 
+  function _isValidUrl(url) {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function _readAutoResume() {
+    try {
+      const stored = window.localStorage.getItem(AUTO_RESUME_KEY);
+      return stored === null ? true : stored === '1';
+    } catch {
+      return true;
+    }
+  }
+
+  function _writeAutoResume(enabled) {
+    try {
+      window.localStorage.setItem(AUTO_RESUME_KEY, enabled ? '1' : '0');
+    } catch (_) {}
+  }
+
+  function _readLastStation() {
+    try {
+      const stored = window.localStorage.getItem(LAST_STATION_KEY);
+      return stored && _isValidUrl(stored) ? stored : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function _writeLastStation(url) {
+    if (!_isValidUrl(url)) return;
+    try {
+      window.localStorage.setItem(LAST_STATION_KEY, url);
+    } catch (_) {}
+  }
+
+  function _renderAutoResume() {
+    if (!resumeToggle) return;
+    resumeToggle.checked = autoResumeEnabled;
+    resumeToggle.setAttribute(
+      'aria-label',
+      autoResumeEnabled
+        ? 'Disable auto-resume last station'
+        : 'Enable auto-resume last station'
+    );
+  }
+
+  function setAutoResume(enabled) {
+    autoResumeEnabled = Boolean(enabled);
+    _writeAutoResume(autoResumeEnabled);
+    _renderAutoResume();
+  }
+
+  function _renderStreamUrl(url) {
+    if (!urlDisplay) return;
+    urlDisplay.innerHTML = `<span class="stream-url__label">SRC</span> ${url || '—'}`;
+    urlDisplay.title = url || '';
+  }
+
   function _scheduleCorsCheck() {
     clearTimeout(corsCheckTimer);
     corsCheckTimer = setTimeout(() => {
@@ -118,15 +189,13 @@ export const Player = (() => {
   }
 
   function play(url) {
-    url = url || currentUrl || initialUrl;
+    url = url || currentUrl || DEFAULT_URL;
     currentUrl = url;
+    _writeLastStation(url);
     _updateBrowserUrl(url);
     FavoritesUI.setActive(url);
 
-    if (urlDisplay) {
-      urlDisplay.innerHTML = `<span class="stream-url__label">SRC</span> ${url}`;
-      urlDisplay.title = url;
-    }
+    _renderStreamUrl(url);
 
     if (btnPlay)   btnPlay.disabled   = true;
     if (btnStop)   btnStop.disabled   = false;
@@ -170,6 +239,7 @@ export const Player = (() => {
 
   if (btnPlay)   btnPlay.addEventListener('click',  () => play());
   if (btnStop)   btnStop.addEventListener('click',  stop);
+  if (resumeToggle) resumeToggle.addEventListener('change', () => setAutoResume(resumeToggle.checked));
   if (btnRecord) btnRecord.addEventListener('click', () => {
     if (Recorder.isRecording()) Recorder.stop();
     else {
@@ -245,6 +315,8 @@ export const Player = (() => {
   }
 
   _updateVolUI(1);
+  _renderAutoResume();
+  _renderStreamUrl(currentUrl);
 
   return { play, stop, on, getInitialUrl: () => initialUrl };
 })();

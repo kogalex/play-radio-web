@@ -15,7 +15,7 @@ import { Player } from './lib/Player.js';
   SearchUI.init();
 
   const initialUrl = Player.getInitialUrl();
-  Player.play(initialUrl);
+  if (initialUrl) Player.play(initialUrl);
 
   // Update active state in both FavoritesUI and SearchUI when player state changes
   Player.on('play', url => {

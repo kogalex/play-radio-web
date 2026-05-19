@@ -927,6 +927,52 @@ main#app {
   flex-shrink: 0;
 }
 
+.resume-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-well);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.resume-toggle:hover,
+.resume-toggle:focus-within {
+  border-color: var(--color-accent);
+}
+
+.resume-toggle__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.resume-toggle__title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: var(--color-text);
+}
+
+.resume-toggle__hint {
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  color: var(--color-text-dim);
+}
+
+.resume-toggle__input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--color-accent);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
 .cors-notice {
   display: none;
   margin-top: 0.8rem;

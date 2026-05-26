@@ -25,6 +25,7 @@ export const ThemeEngine = (() => {
     { id: 'christmas', name: 'Christmas', label: 'Christmas' },
     { id: 'dance-matrix', name: 'Dance Matrix', label: 'Default' },
     { id: 'hacker-news', name: 'Hacker News', label: 'Default' },
+    { id: 'winamp-classic', name: 'Winamp Skin', label: 'Classic Player' },
   ];
 
   let _activeId = null;
